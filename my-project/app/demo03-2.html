@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>自定义指令</title>
+</head>
+<body>
+	<div id="app">
+		<div @click="up">点击</div>
+		<div id="demo" v-demo:hello.a.b="msg"></div>
+		<div id="two" v-two="{color:'red', text:'gaofeng'}"></div>
+		<div id="three" v-three.literal="foo bar baz"></div>
+		<my-directive class="hello" name="hi"></my-directive>
+		<!-- 高级选项 -->
+		<my-directive2 class="hello2" name="hi2" a="page"></my-directive2>
+		<my-directive3 class="hello3" name="hi3" v-bind:a="someValue">
+			<input type="text" v-model="someValue" />
+		</my-directive3>
+		<!-- deep -->
+		<!-- <div v-my-directive4="a"></div> -->
+		<my-directive4 v-bind="a"></my-directive4>
+		<button @click="change">change</button>{{a.b.c}}
+		<!-- toWay -->
+		<!-- <example v-bind="m.n.o"></example> -->
+		<div>
+			<span>自定义组件</span>
+			<input v-example="m.n.o" />
+			<br>
+			<span>父作用域{{m.m.o}}</span>
+		</div>
+	<div>
+
+	<script type="text/javascript" src="./src/vue1.0.28.js"></script>
+	<script type="text/javascript">
+		Vue.directive('demo', {
+			bind: function () {
+				console.log('自定义指令');
+			},
+			update: function (newValue, oldValue) {
+				this.el.innerHTML = 
+					'name - ' + this.name + '<br>' +
+					'expression - ' + this.expression + '<br>' +
+					'argument - ' + this.arg + '<br>' +
+					'modifiers - ' + JSON.stringify(this.modifiers) + '<br>' +
+					'value - ' + newValue + '<br>' +
+					'vm-msg - ' + this.vm.msg;
+			},
+			unbind: function () {
+
+			}
+		})
+
+		Vue.directive('two', function (value) {
+			console.log(value.color, value.text);
+		})
+
+		Vue.directive('three', function (value) {
+			console.log(value);
+		})
+
+		Vue.elementDirective('my-directive', {
+			bind: function () {
+				console.log(this.el.className, this.el.getAttribute('name'));
+			}
+		})	
+
+		Vue.elementDirective('my-directive2', {
+			params: ['a'],
+			bind: function () {
+				console.log(this.params.a);
+				console.log(this.el.getAttribute('name'));	
+			}
+		})
+
+		Vue.elementDirective('my-directive3', {
+			params: ['a'],
+			paramWatchers: {
+				a: function (val, oldVal) {
+					console.log('a changed!');
+				}
+			}
+		})
+
+		Vue.elementDirective('my-directive4', {
+			deep: true,
+			update: function (obj) {
+				console.log(obj.b.c)
+			}
+		})
+
+		var demoVM = new Vue({
+			el: '#app',
+			data: {
+				msg: 'hello',
+				someValue: 'value',
+				a: {
+					b: {
+						c: 2
+					}
+				},
+				m: {
+					n: {
+						o: 10
+					}
+				}
+			},
+			methods: {
+				up: function () {
+					console.log('click');
+				},
+				change: function () {
+					demoVM.a.b.c = 4;
+				}
+			}
+		})
+	</script>
+</body>
+</html>

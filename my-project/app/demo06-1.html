@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过滤器</title>
+</head>
+<body>
+	<div id="app">
+		<p>{{"abcd" | capitalize}}</p>
+		<p>{{"abcd" | uppercase}}</p>
+		<p>{{"AbcD" | lowercase}}</p>
+		<div>{{items | json 4}}</div>
+		<div>
+			<div v-for="item in items | limitBy 5 2">{{item.name}}</div>
+		</div>
+		<br>
+		<div>
+			<div>
+				<input type="text" v-model="searchText" />
+			</div>
+			<div v-for="item in items | filterBy searchText in search">{{item.name}}</div>
+		</div>
+		<br>
+		<div>
+			<div v-for="item in items | orderBy 'name' -1">{{item.name + '-' + $index}}</div>
+		</div>
+		<div>
+			<p>{{amount | currency}}</p>
+			<p>{{amount | currency '&'}}</p>
+			<p>{{amount | currency '$' 3}}</p>
+		</div>
+		<div v-text="message | reverse"></div>
+		<div v-text="message2 | wrap 'before' 'after'"></div>
+		<div>
+			<div>{{message3}}</div>
+			<input type="text" v-model="message3 | example" />
+		</div>
+	</div>
+
+	<script type="text/javascript" src="./src/vue1.0.28.js"></script>
+	<script type="text/javascript">
+		Vue.filter('reverse', function (value) {
+			return value.split('').reverse().join('');
+		})
+
+		new Vue({
+			el: '#app',
+			data: {
+				search: ['name', 'address'],
+				searchText: '',
+				items: [
+					{
+						name: 1,
+						address: 'china'
+					}, {
+						name: 2,
+						address: 'china'
+					}, {
+						name: 3,
+						address: 'jiangxi'
+					}, {
+						name: 4,
+						address: 'jiangxi'
+					}, {
+						name: 5,
+						address: 'jiangxi'
+					}, {
+						name: 1,
+						address: 'jiangxi'
+					}, {
+						name: 7,
+						address: '1'
+					}, {
+						name: 8,
+						address: 'jiangxi'
+					}
+				],
+				amount: 12345,
+				message: 'abc',
+				message2: 'hello',
+				message3: 'gaofeng'
+			},
+			filters: {
+				wrap: function (value, begin, end) {
+					return begin + ' ' + value + ' ' + end;
+				},
+				example: {
+					read: function (val) {
+						return 'read ' + val;
+					},
+					write: function (newVal, oldVal) {
+						return newVal + ' write';
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

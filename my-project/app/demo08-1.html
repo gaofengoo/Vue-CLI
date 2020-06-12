@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过渡</title>
+	<style type="text/css">
+		.expand-transition{
+			transition: all .3s ease;
+			height: 30px;
+			padding: 10px;
+			background: #eee;
+		}
+		.expand-enter, .expand-leave{
+			height: 0;
+			padding: 0 10px;
+			opacity: 0;
+		}
+		.bounceInLeft{
+			color: #f00;
+		}
+		.bounceOutRight{
+			color: #0f0;
+		}
+		.hello{
+			width: 200px;
+			height: 100px;
+			background: #f00;
+		}
+		.hello-trainsition{
+			display: inline-block;
+		}
+		.hello-enter{
+			animation: hello-in 2s;
+		}
+		.hello-leave{
+			animation: hello-out 2s;
+		}
+		@keyframes hello-in{
+			0%{
+				transform: scale(0);
+			}
+			50%{
+				transform: scale(1.5);
+			}
+			100%{
+				transform: scale(1);
+			}
+		}
+		@keyframes hello-out{
+			0%{
+				transform: scale(1);
+			}
+			50%{
+				transform: scale(1.5);
+			}
+			100%{
+				transform: scale(0);
+			}
+		}
+		.demo-transition{
+			transition: all 2s ease;
+			height: 30px;
+			padding: 10px;
+			background: #eee;
+		}
+		.demo-enter, .demo-leave{
+			height: 0;
+			padding: 0 10px;
+			opacity: 0;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<div @click="change">点击</div>
+		<div v-show="show" transition="expand"></div>
+		<br>
+		<div v-if="show" :transition="name"></div>
+		<!-- 自定义css类名 -->
+		<div v-show="show" class="animated" transition="bounce">watch</div>
+		<!-- 动画 -->
+		<div v-show="show" class="hello" transition="hello">hello</div>
+		<!-- 渐进过渡 -->
+		<ul>
+			<li v-show="show" v-for="item in items" transition="demo" stagger="100">{{item.name}}</li>
+		</ul>
+	</div>
+
+	<script src="./src/vue1.0.28.js"></script>
+	<script type="text/javascript">
+		Vue.transition('bounce', {
+			type: 'animation',
+			enterClass: 'bounceInLeft',
+			leaveClass: 'bounceOutRight'
+		});
+
+		Vue.transition('demo', {
+			stagger: function (index) {
+				return Math.min(300, index * 200);
+			}
+		});
+
+		var app = new Vue({
+			el: '#app',
+			data: {
+				show: true,
+				name: 'expand',
+				items: [
+					{
+						name: 1
+					}, {
+						name: 2
+					}, {
+						name: 3
+					}, 
+				]
+			},
+			methods: {
+				change: function () {
+					return this.show = !this.show;
+				}
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>基于第三方组件开发</title>
+</head>
+<body>
+	<div id="app">
+		<template id="chart">
+			<canvas class="vchart {{chartType}}-chart" v-el:chart-canvas :width="width" :height="height"></canvas>
+		</template> 
+		<dd-chart :datasets="datasets" :labels="labels" :width="width" :height="height"></dd-chart>		
+	</div>
+
+	<script type="text/javascript" src="./src/vue1.0.28.js"></script>
+	<script type="text/javascript" src="./src/chart.js"></script>
+	<script type="text/javascript">
+		var ddChart = Vue.extend({
+			template: '#chart',
+		 	props: {
+		 		chartType: {
+		 			type: String,
+		 			default: 'line'
+		 		},
+		 		width: {
+		 			type: Number
+		 		},
+		 		height: {
+		 			type: Number
+		 		},
+		 		labels: {
+		 			type: Array,
+		 			validator(value) {
+		 				return value.every(label => typeof label === 'string')
+		 			},
+		 			default () {
+		 				return []
+		 			}
+		 		},
+		 		datasets: {
+		 			type: Array,
+		 			validator(value) {
+		 				return value.every(series => {
+		 					return Array.isArray(series.data) && series.data.every(val => {
+		 						return typeof val === 'number'
+		 					})
+		 				})
+		 			},
+		 			coerce(val) {
+		 				return JSON.parse(JSON.stringify(val))
+		 			},
+		 			default () {
+		 				return []
+		 			}
+		 		},
+		 		options: {
+		 			type: Object,
+		 			default () {
+		 				return {}
+		 			}
+		 		},
+		 		responsive: {
+		 			type: Boolean,
+			 		default: null
+		 		},
+		 		legend: {
+		 			coerce(val) {
+		 				if (typeof val === 'boolean') {
+		 					return {
+		 						display: val
+		 					}
+		 				}
+		 			},
+		 		default: null
+		 		}
+		 	},
+		 	methods: {
+		 		parseCommonOptions(options) {
+		 			// responsive 
+		 			if (this.responsive !== null) {
+		 				options.responsive = this.responsive
+		 			}
+		 			// legend 
+		 			if (this.legend !== null) {
+		 				options.legend = this.legend
+		 			}
+		 			return options
+		 		}
+		 	},
+		 	computed: {
+		 		chartData() {
+		 			return {
+		 				labels: this.labels,
+		 				datasets: this.datasets
+		 			}
+		 		}, 
+		 		chartOptions() {
+		 			let options = {};
+		 			options = this.parseCommonOptions(options);
+		 			if (this.parseCustomOptions) {
+		 				options = this.parseCustomOptions(options)
+		 			}
+		 			return Object.assign(this.options, options)
+		 		}
+		 	},
+		 	watch: {
+		 		datasets: {
+		 			// don' t need deep handler
+		 			handler (val, oldVal) {
+		 				this.chartInstance.data.datasets = val;
+		 				this.chartInstance.update();
+		 			}
+		 		}
+		 	},
+		 	data () {
+		 		return {
+		 			chartInstance: null
+		 		}
+		 	},
+		 	ready () {
+		 		const chartCanvas = this.$els.chartCanvas;
+		 		if (chartCanvas) {
+		 			const ctx = chartCanvas.getContext('2d');
+			 		this.chartInstance = new Chart(ctx, {
+			 			type: this.chartType,
+			 			data: this.chartData,
+			 			options: this.chartOptions
+			 		})
+		 		}
+		 	}
+	 	})
+
+	 	Vue.component('dd-chart', ddChart);
+
+		var app = new Vue({
+			el: '#app',
+			data: function () {
+				return {
+					width: 500,
+					height: 200,
+					labels: ['1 月', '2 月', '3 月', '4 月', '5 月', '6 月'],
+					datasets: [{
+						label: '数据一',
+						data: [110, 90, 100, 81, 106, 75, 88]
+					}, {
+						label: '数据二',
+						data: [100, 80, 90, 71, 96, 65, 78]
+					}, {
+						label: '数据三',
+						data: [90, 70, 80, 61, 86, 55, 68]
+					}, {
+						label: '数据四',
+						data: [80, 60, 70, 51, 76, 45, 58]
+					}, {
+						label: '数据五',
+						data: [70, 50, 60, 41, 66, 35, 48]
+					}, {
+						label: '数据六',
+						data: [60, 40, 50, 31, 56, 25, 38]
+					}, {
+						label: '数据七',
+						data: [50, 30, 40, 21, 46, 15, 28]
+					}]
+				}
+			},
+			components: { 
+				'dd-chart': ddChart 
+			}
+		});
+	</script>
+</body>
+</html>

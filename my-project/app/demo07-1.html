@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>class与style</title>
+</head>
+<body>
+	<div id="app">
+		<div class="member" v-bind:class="{'red':isTrue, 'green':isFalse}"></div>
+		<div class="member" v-bind:class="obj"></div>
+		<div class="member" v-bind:class="fun"></div>
+		<div class="member" v-bind:class="[class1, class2]"></div>
+		<div class="member" v-bind:class="[class1, isFalse ? class2 : '']"></div>
+		<div class="member" v-bind:class="[class1, {class2: isFalse, class3: isTrue}]"></div>
+		<div v-bind:style="objStyle"></div>
+		<div v-bind:style="fun2"></div>
+		<div v-bind:style="[objStyle, objStyle2]"></div>
+	</div>
+
+	<script type="text/javascript" src="./src/vue1.0.28.js"></script>
+	<script type="text/javascript">
+		var app = new Vue({
+			el: '#app',
+			data: {
+				isTrue: true,
+				isFalse: false,
+				age: 30,
+				number1: 1000,
+				obj: { 
+					red: false, 
+					green: true
+				},
+				class1: 'my_class1',
+				class2: 'my_class2',
+				class3: 'my_class3',
+				objStyle: {
+					color: '#f00',
+					fontSize: '20px'
+				},
+				objStyle2: {
+					height: '50px',
+					background: '#0fe',
+					borderRadius: '4px'
+				}
+			},
+			computed: {
+				fun: function () {
+					return {
+						hello: this.age > 40 ? true : false,
+						large: this.number1 > 500 ? true : false
+					}
+				},
+				fun2: function () {
+					return {
+						color: this.age > 40 ? '#000' : '#0f0',
+						fontSize: this.number1 > 500 ? '20px' : '40px'
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

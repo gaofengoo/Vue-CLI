@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>指令逻辑</title>
+</head>
+<body>
+	<div id="app">
+		<p>{{a / 100}}</p>
+		<p>{{true ? 1 : 0}}</p>
+		<p>{{b | uppercase}}</p>
+		<p v-if="show">text</p>
+		<p>
+			<a v-bind:href="url">百度</a>
+		</p>
+		<p @click="change">点击</p>
+	</div>
+
+	<script type="text/javascript" src="./src/vue1.0.28.js"></script>
+	<!-- <script type="text/javascript" src="./src/vue.js"></script> -->
+	<script type="text/javascript">
+		new Vue({
+			el: '#app',
+			data: {
+				a: 200,
+				b: "example",
+				show: false,
+				url: 'https://www.baidu.com/'
+			},
+			methods: {
+				change () {
+					return this.show == false ? this.show = true : this.show = false;
+				}
+			}
+		})
+	</script>
+</body>
+</html>

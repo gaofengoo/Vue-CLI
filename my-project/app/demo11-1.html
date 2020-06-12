@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件</title>
+</head>
+<body>
+	<div id="app">
+		<my-component></my-component>
+		<my-component2></my-component2>
+		<new-component></new-component>
+		<my-component3></my-component3>
+		<!-- 数据传递 -->
+		<child2 msg="hello" my-component="gaofeng"></child2>
+		<my-component4></my-component4>
+		<!-- 绑定修饰符 -->
+		<div>
+			<input type="text" v-model="info.name" />
+			<br>
+			<div>{{info.name}}</div>
+			<child3 v-bind:msg.once="info"></child3>
+		</div>
+		<!-- 组件通信 -->
+		<!-- 子组件 -->
+		<template id="child-template">
+			<input type="text" v-model="msg2" />
+			<button @click="notify">dispatch</button>
+		</template>
+		<!-- 父组件 -->
+		<div id="events-example">
+			<p>Message:{{messages | json}}</p>
+			<child4 v-on:child-msg="handleIt"></child4>
+		</div>
+		<!-- slot分发内容 -->
+		<my-header>
+			<p>a</p>
+			<p>b</p>
+		</my-header>
+		<!-- 具名slot -->
+		<my-footer>
+			<p slot="one">one</p>
+			<p slot="two">two</p>
+			<p>default</p>
+		</my-footer>
+		<!-- 混合 -->
+		<div>混合</div>
+		<new-component></new-component>
+		<br>
+		<!-- 动态组件 -->
+		<div>
+			<input type="radio" id="one" value="fast" v-model="currentView" />
+			<label for="one">fast</label>
+			<input type="radio" id="two" value="bus" v-model="currentView" />
+			<label for="two">bus</label>
+			<input type="radio" id="three" value="business" v-model="currentView" />
+			<label for="three">business</label>
+			<br>
+			<template id="fast">
+				<div>快车</div>
+			</template>
+			<template id="bus">
+				<div>巴士</div>
+			</template>
+			<template id="business">
+				<div>专车</div>
+			</template>
+			<component :is="currentView"></component>
+		</div>
+		<!-- v-for -->
+		<new-component v-for="item in items" :item="item.name" msg="gaogao" :index="$index"></new-component>
+		<!-- 可复用组件 -->
+		<new-component2
+			:foo="a"
+			:bar="b">
+			<img slot="icon" src="" />
+			<p slot="main-text">Hello</p>
+		</new-component2>
+		<!-- 内联模板 -->
+		<p>inline-template</p>
+		<my-item v-for="item in items2" :item="item" inline-template>
+			<p>{{a}}, {{item.text}}</p>
+		</my-item>
+		<p>no-inline-template</p>
+		<my-item v-for="item in items2" :item="item">
+			<p>{{a}}, {{items2[0].text}}</p>
+		</my-item>
+	</div>
+
+	<script type="text/javascript" src="./src/vue1.0.28.js"></script> 	
+	<script type="text/javascript">
+		var MYComponent = Vue.extend({
+			template: '<div>Hello World!</div>'
+		});
+
+		Vue.component('my-component', MYComponent);
+
+		var Child = Vue.extend({
+			template: '<div>child</div>',
+			replace: true
+		});
+
+		var Parent = Vue.extend({
+			template: '<div>i am parent<br><child><child></div>',
+			components: {
+				'child': Child
+			}
+		});
+
+		Vue.component('new-component', {
+			props: ['msg', 'item'],
+			template: '<div>Hello World!new{{msg}}{{item}}</div>',
+			replace: true
+		});
+
+		var Component3 = Vue.extend({
+			components: {
+				'my-component3': {
+					template: '<div>component3</div>'
+				}
+			}
+		});
+
+		Vue.component('my-component3', Component3);
+
+		// 数据传递
+		Vue.component('child2', {
+			props: ['msg', 'myComponent'],
+			template: '<div>{{msg}},DD,{{myComponent}}</div>',
+			replace: true
+		});
+
+		var ChildNew = Vue.extend({
+			props: ['argsMember'],
+			template: '<div>{{argsMember}}</div>',
+			replace: true
+		});
+
+		var Parent2 = Vue.extend({
+			template: '<div>i am parent<br><child :args-member="gaogao"></child></div>',
+			data: function () {
+				return {'gaogao': 'sheng'}
+			},
+			components: {
+				'child': ChildNew
+			}
+		});
+
+		// prop验证
+		Vue.component('example', {
+			props: {
+				propA: 'null',
+				propM: ['hello', 3],
+				propB: {
+					type: 'string',
+					required: true
+				},
+				propC: {
+					type: 'number',
+					default: 100
+				},
+				propD: {
+					type: 'object',
+					default: function () {
+						return {msg: 'hello'}
+					}
+				},
+				propE: {
+					twoWay: true
+				},
+				propF: {
+					validator: function (value) {
+						return value > 10;
+					}
+				}
+			}
+		});
+
+		// 组件通信
+		// 注册子组件
+		Vue.component('child4', {
+			template: '#child-template',
+			data: function () {
+				return {msg2: 'hello'}
+			},
+			methods: {
+				notify: function () {
+					if (this.msg2.trim()) {
+						this.$dispatch('child-msg', this.msg2);
+						this.msg2 = '';
+					}
+				}
+			}
+		});
+
+		// 单个slot
+		var myHeader = Vue.extend({
+			template: '<div>Hello World!<slot></slot></div>'
+		});
+
+		Vue.component('my-header', myHeader);
+
+		// 具名slot
+		var myFooter = Vue.extend({
+			template: '<div><slot name="one"></slot><slot></slot><slot name="two"></slot></div>'
+		});
+
+		Vue.component('my-footer', myFooter);
+
+		// 混合
+		var myXing = {
+			created: function () {
+				this.hello()
+			},
+			methods: {
+				hello: function () {
+					console.log('hello gaofeng');
+				},
+				conflicting: function () {
+					console.log('from myXing');
+				}
+			}
+		}
+
+		var newComponent = Vue.extend({
+			mixins: [myXing],
+			template: '<h1>hello DiDi</h1>',
+			methods: {
+				conflicting: function () {
+					console.log('from self');
+				}
+			},
+			created: function () {
+				console.log('回调');
+			}
+		});
+
+		// 动态组件
+		var fast = Vue.extend({
+			template: '#fast',
+			replace: true
+		});
+
+		var bus = Vue.extend({
+			template: '#bus',
+			replace: true
+		});
+
+		var business = Vue.extend({
+			template: '#business',
+			replace: true
+		});
+
+		// 异步组件
+		Vue.component('async-example', function (resolve, reject) {
+			setTimeout(function () {
+				resolve({
+					template: '<div>async</div>'
+				});
+			}, 1000);
+		});
+
+		// 复用组件
+		Vue.component('new-component2', {
+			template: '<div>Hello World2!</div>',
+			replace: true
+		});
+
+		// 内联模板
+
+		var app = new Vue({
+			el: '#app',
+			data: {
+				info: {
+					name: '顺风车'
+				},
+				messages: [],
+				currentView: 'fast',
+				items: [
+					{
+						name: 1
+					}, {
+						name: 2
+					}, {
+						name: 3
+					}
+				],
+				items2: [
+					{
+						number: 1,
+						text: 'one'
+					}, {
+						number: 2,
+						text: 'two'
+					}
+				],
+				a: 'i am in parent'
+			},
+			components: {
+				'my-component2': Parent,
+				'my-component4': Parent2,
+				// 绑定修饰符
+				'child3': { 
+					props: ['msg'],
+					template: '<div>{{msg.name}}haha</div>'
+				},
+				// 'new-component': newComponent,
+				fast: fast,
+				bus: bus,
+				business: business,
+				'my-item': {
+					props: ['item'],
+					data: function () {
+						return {
+							a: 'i am in child'
+						}
+					},
+					template: '<p>item模板:{{a}},{{item.text}};slot:<slot></slot></p>'
+				}
+			},
+			methods: {
+				handleIt: function () {
+					alert('a');	
+				}
+			},
+			// 初始化父组件
+			events: {
+				'child-msg': function (msg) {
+					this.messages.push(msg);
+				}
+			}
+		})
+
+		// 混合回调
+		var vm = new newComponent();
+		vm.conflicting();
+	</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>表单控件</title>
+</head>
+<body>
+	<div id="app">
+		<div>
+			<span>{{text}}</span>
+			<br>
+			<input type="text" v-model="text" placeholder="hello" debounce="2000" />
+		</div>
+		<div>
+			<input type="checkbox" id="one" value="one" v-model="arrs" />
+			<label for="one">1</label>
+			<br>
+			<input type="checkbox" id="two" value="two" v-model="arrs" />
+			<label for="two">2</label>
+			<br>
+			<input type="checkbox" id="three" value="three" v-model="arrs" />
+			<label for="three">3</label>
+			<br>
+			<span>{{arrs | json}}</span>
+		</div>
+		<div>
+			<input type="radio" id="man" value="man" v-model="arrs2" />
+			<label for="man">男</label>
+			<br>
+			<input type="radio" id="woman" value="woman" v-model="arrs2" />
+			<label for="woman">女</label>
+			<br>
+			<span>{{arrs2}}</span>
+		</div>
+		<div>
+			<select v-model="arrs3">
+				<!-- <option selected value="a">1</option>
+				<option value="b">2</option>
+				<option value="c">3</option> -->
+				<option v-for="option in options" :value="option.value" :selected="option.choose">{{option.text}}</option>
+			</select>
+			<br>
+			<span>select: {{arrs3}}</span>
+		</div>
+		<div>
+			<select v-model="arrs4" multiple>
+				<!-- <option selected value="a">1</option>
+				<option value="b">2</option>
+				<option value="c">3</option> -->
+				<option v-for="option in options" :value="option.value" :selected="option.choose">{{option.text}}</option>
+			</select>
+			</select>
+			<br>
+			<span>select: {{arrs4 | json}}</span>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="./src/vue1.0.28.js"></script>
+	<script type="text/javascript">
+		var app = new Vue({
+			el: '#app',
+			data: {
+				text: '',
+				arrs: [],
+				arrs2: [],
+				arrs3: [],
+				arrs4: [],
+				options: [
+					{
+						value: 'a',
+						text: 1,
+						choose: false
+					}, {
+						value: 'b',
+						text: 2,
+						choose: true
+					}, {
+						value: 'c',
+						text: 3,
+						choose: false
+					}, {
+						value: 'd',
+						text: 4,
+						choose: false
+					}
+				]
+			}
+		})
+	</script>
+</body>
+</html>

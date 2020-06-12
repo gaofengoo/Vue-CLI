@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>指令</title>
+	<style type="text/css">
+		[v-cloak]{
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<p v-show="show">text1</p>
+		<p v-show="!show">text2</p>
+		<p>
+			<a v-bind:href="url">百度</a>
+		</p>
+		<p @click="change">点击</p>
+		<!-- 表单 -->
+		<div>
+			<span>姓名：</span>
+			<input type="text" v-model="text" debounce="2000" />{{text}}
+			<br />
+			<span v-cloak v-text="text"></span><br />
+			<div v-cloak>{{{demoHtml}}}</div>
+			<div v-cloak v-html="demoHtml"></div>
+		</div>
+		<div>
+			<span>性别：</span>
+			<input type="radio" v-model="sex" value="one" />
+			<label>男</label>
+			<input type="radio" v-model="sex" value="two" />
+			<label>女</label>
+		</div>
+		<div>
+			<span>兴趣：</span>
+			<input type="checkbox" v-model="interest" value="swim" />
+			<label>游泳</label>
+			<input type="checkbox" v-model="interest" value="read" checked />
+			<label>阅读</label>
+			<input type="checkbox" v-model="interest" value="jianshen" />
+			<label>健身</label>
+			<input type="checkbox" v-model="interest" value="run" />
+			<label>跑步</label>
+		</div>
+		<div>
+			<span>身份：</span>
+			<select v-model="id">
+				<option value="one">1</option>
+				<option value="two" selected>2</option>
+				<option value="three">3</option>
+				<option value="four">4</option>
+			</select>
+		</div>
+		<div>
+			<p>
+				<span>搜索</span>
+				<input type="text" v-model="search" />
+			</p>
+			<ul>
+				<li v-for="item in items | filterBy search in 'name'">{{item.name}}</li>
+			</ul>
+		</div>
+		<div>
+			<ul>
+				<li v-for="item in items2 | orderBy field reverse">{{'index:' + $index + '&nbsp;' + item.name}}</li>
+			</ul>
+		</div>
+		<div>
+			<ul>
+				<li v-for="value in arr1">{{$key}}:{{value}}</li>
+				<li>===</li>
+				<li v-for="(key, value) in arr2">{{key}}:{{value.msg}}</li>
+			</ul>
+		</div>
+		<div>
+			<img v-bind:src="img1" width="50" />
+			<br>
+			<img :src="img1" width="50">
+			<br>
+			<div :class="[classA, {classB: isB, classC: isC}]">类</div>
+			<div v-bind="{id: one, OtherAttr: two}">多个属性</div>
+		</div>
+		<div>
+			<div v-on:click="doThis">点击1</div>
+			<div v-on:click="doThis('hello', $event)">点击2</div>
+			<div @click.stop="doThis">点击3</div>
+			<div @click.prevent="doThis">点击4</div>
+			<div @click.prevent="">点击5</div>
+			<div @click.stop.prevent="doThis">点击6</div>
+			<input @keyup.enter="enter" value="回车1" />
+			<input @keyup.13="enter" value="回车2" />
+		</div>
+	</div>
+
+	<script type="text/javascript" src="./src/vue1.0.28.js"></script>
+	<script type="text/javascript">
+		new Vue({
+			el: '#app',
+			data: {
+				show: false,
+				text: 'text',
+				sex: '',
+				interest: [],
+				id: '',
+				items: [
+					{
+						name: 1
+					}, {
+						name: 2
+					}, {
+						name: 3
+					}, {
+						name: 4
+					}
+				],
+				search: '',
+				items2: [
+					{
+						name: 2
+					}, {
+						name: 3
+					}, {
+						name: 1
+					}, {
+						name: 4
+					}
+				],
+				field: 'name',
+				reverse: false,
+				arr1:{
+					age: 23,
+					name: 'gaofeng',
+					home: 'jiangxi'
+				},
+				arr2:{
+					one: {
+						msg: 'yes'
+					},
+					two: {
+						msg: 'no'
+					}
+				},
+				demoHtml: '<p>html</p>',
+				img1: 'https://cn.vuejs.org/images/logo.png',
+				classA: 'A',
+				isB: true,
+				isC: false,
+				one: 'hello',
+				two: 'gaofeng'
+			},
+			methods: {
+				change () {
+					return this.show == false ? this.show = true : this.show = false;
+				},
+				doThis () {
+					alert('点击');
+				},
+				enter () {
+					alert('回车');
+				}
+			}
+		})
+	</script>
+</body>
+</html>

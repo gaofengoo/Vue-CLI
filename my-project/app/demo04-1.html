@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>计算属性</title>
+</head>
+<body>
+	<div id="app">
+		<div>
+			<input type="text" v-model="a" />
+			<input type="text" v-model="b" />
+			<input type="text" v-model="out" />
+			<br />
+			<p>{{a}}</p>
+			<p>{{b}}</p>
+			<p>{{out}}</p>
+		</div>
+		<!-- 缓存 -->
+		<div>{{example}}</div>
+		<!-- getter不执行 -->
+		<div>
+			<button @click="toogleShow">show</button>
+			<p>{{total}}</p>
+			<p v-if="showTatal">{{total}}</p>
+		</div>
+		<!-- v-repeat -->
+		<p v-for="item in items">
+			<button>{{item.text}}</button>
+		</p>
+	</div>
+
+	<script type="text/javascript" src="./src/vue1.0.28.js"></script>
+	<script type="text/javascript">
+		var items = [
+			{
+				number: 1,
+				text: 'one'
+			}, {
+				number: 2,
+				text: 'two'
+			}
+		];
+
+		var app = new Vue({
+			el: '#app',
+			data: {
+				a: 'a',
+				b: 'b',
+				welcome: 'welcome to join LBX',
+				showTatal: true,
+				base: 100,
+				items: items
+			},
+			computed: {
+				out: {
+					get: function () {
+						return this.a + this.b
+					},
+					set: function (newVal) {
+						var names = newVal.split(' ');
+						this.a = names[0];
+						this.b = names[1];
+					}
+				},
+				example: {
+					cache: false,
+					get: function () {
+						return Date.now() + this.welcome;
+					}, 
+					set: function () {
+
+					}
+				},
+				total: function () {
+					return this.base + 1;
+				}
+			},
+			methods: {
+				toogleShow: function () {
+					this.showTatal = !this.showTatal;
+				}
+			}
+		})
+	</script>
+</body>
+</html>
