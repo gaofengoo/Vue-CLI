@@ -3,25 +3,25 @@
 		<!-- <img alt="Vue logo" src="./assets/logo.png"> -->
 		<!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
 		<!-- 路由 -->
-		<router-show></router-show>
+		<!-- <router-show></router-show>
 		<h1>hello app</h1>
 		<p>
 			<router-link to="/foo">Go to Foo</router-link>
 			<router-link to="/bar">Go to Bar</router-link>
 		</p>
-		<router-view></router-view>
+		<router-view></router-view> -->
 	</div>
 </template>
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
-import routerShow from './components/routerShow.vue'
+// import routerShow from './components/routerShow.vue'
 
 export default {
 	name: 'App',
 	components: {
 		// HelloWorld
-		routerShow
+		// routerShow
 	}
 }
 </script>
