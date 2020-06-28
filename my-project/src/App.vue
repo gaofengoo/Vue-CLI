@@ -2,8 +2,8 @@
 	<div id="app">
 		<!-- <img alt="Vue logo" src="./assets/logo.png"> -->
 		<!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-		<routeShow></routeShow>
 		<!-- 路由 -->
+		<router-show></router-show>
 		<h1>hello app</h1>
 		<p>
 			<router-link to="/foo">Go to Foo</router-link>
@@ -15,13 +15,13 @@
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
-import routeShow from './components/routeShow.vue'
+import routerShow from './components/routerShow.vue'
 
 export default {
 	name: 'App',
 	components: {
 		// HelloWorld
-		routeShow
+		routerShow
 	}
 }
 </script>

@@ -6,7 +6,7 @@
 
 <script>
 export default {
-	name: 'routeShow',
+	name: 'routerShow',
 	props: {
 		msg: String
 	},
